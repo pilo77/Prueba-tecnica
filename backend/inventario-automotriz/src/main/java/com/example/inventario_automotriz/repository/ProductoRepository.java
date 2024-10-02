@@ -12,8 +12,10 @@ import java.util.Optional;
 
 @Repository
 public interface ProductoRepository extends JpaRepository<Producto, Long> {
+
     Optional<Producto> findByNombre(String nombre);
-    // Consulta dinámica para buscar productos por nombre, usuario y fecha de ingreso
+
+    // Consulta dinámica para buscar productos por nombre, usuario, fecha de ingreso y fecha de modificación
     @Query("SELECT p FROM Producto p WHERE (:nombre IS NULL OR p.nombre LIKE %:nombre%) " +
             "AND (:usuarioId IS NULL OR p.usuario.id = :usuarioId) " +
             "AND (:fechaIngreso IS NULL OR p.fechaIngreso = :fechaIngreso) " +
@@ -22,5 +24,4 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
                                    @Param("usuarioId") Long usuarioId,
                                    @Param("fechaIngreso") LocalDate fechaIngreso,
                                    @Param("fechaModificacion") LocalDate fechaModificacion);
-
 }

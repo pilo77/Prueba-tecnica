@@ -1,8 +1,10 @@
 package com.example.inventario_automotriz.controller;
 
-import com.example.inventario_automotriz.dto.UsuarioDTO;
+import com.example.inventario_automotriz.dto.request.UsuarioRequestDTO;
+import com.example.inventario_automotriz.dto.response.UsuarioResponseDTO;
 import com.example.inventario_automotriz.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,36 +21,38 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
+    // Crear un nuevo usuario
     @PostMapping
-    public ResponseEntity<UsuarioDTO> crearUsuario(@RequestBody UsuarioDTO usuarioDTO) {
-        UsuarioDTO nuevoUsuario = usuarioService.crearUsuario(usuarioDTO);
-        return ResponseEntity.ok(nuevoUsuario);
+    public ResponseEntity<UsuarioResponseDTO> crearUsuario(@RequestBody UsuarioRequestDTO usuarioRequestDTO) {
+        UsuarioResponseDTO nuevoUsuario = usuarioService.crearUsuario(usuarioRequestDTO);
+        return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
     }
 
+    // Obtener todos los usuarios
     @GetMapping
-    public ResponseEntity<List<UsuarioDTO>> obtenerTodosLosUsuarios() {
-        List<UsuarioDTO> usuarios = usuarioService.obtenerTodosLosUsuarios();
-        return ResponseEntity.ok(usuarios);
+    public ResponseEntity<List<UsuarioResponseDTO>> obtenerTodosLosUsuarios() {
+        List<UsuarioResponseDTO> usuarios = usuarioService.obtenerTodosLosUsuarios();
+        return new ResponseEntity<>(usuarios, HttpStatus.OK);
     }
 
+    // Obtener un usuario por ID
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> obtenerUsuarioPorId(@PathVariable Long id) {
-        UsuarioDTO usuario = usuarioService.obtenerUsuarioPorId(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        return ResponseEntity.ok(usuario);
+    public ResponseEntity<UsuarioResponseDTO> obtenerUsuarioPorId(@PathVariable Long id) {
+        UsuarioResponseDTO usuario = usuarioService.obtenerUsuarioPorId(id);
+        return new ResponseEntity<>(usuario, HttpStatus.OK);
     }
 
+    // Actualizar un usuario
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> actualizarUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO) {
-        usuarioDTO.setId(id); // Aseguramos que el ID sea el correcto
-        UsuarioDTO usuarioActualizado = usuarioService.actualizarUsuario(usuarioDTO);
-        return ResponseEntity.ok(usuarioActualizado);
+    public ResponseEntity<UsuarioResponseDTO> actualizarUsuario(@PathVariable Long id, @RequestBody UsuarioRequestDTO usuarioRequestDTO) {
+        UsuarioResponseDTO usuarioActualizado = usuarioService.actualizarUsuario(id, usuarioRequestDTO);
+        return new ResponseEntity<>(usuarioActualizado, HttpStatus.OK);
     }
 
-    // Método para eliminar usuario con la validación del cargo del solicitante
+    // Eliminar un usuario
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarUsuario(@PathVariable Long id, @RequestParam String cargoSolicitante) {
-        usuarioService.eliminarUsuario(id, cargoSolicitante);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> eliminarUsuario(@PathVariable Long id) {
+        usuarioService.eliminarUsuario(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

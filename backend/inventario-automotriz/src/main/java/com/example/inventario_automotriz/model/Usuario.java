@@ -1,12 +1,11 @@
 package com.example.inventario_automotriz.model;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "usuario")
+@Table(name = "usuarios")
 public class Usuario {
 
     @Id
@@ -16,24 +15,21 @@ public class Usuario {
     @Column(nullable = false)
     private String nombre;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
     private int edad;
 
-    @Column(nullable = false)
-    private String cargo;
+    @ManyToOne
+    @JoinColumn(name = "cargo_id", nullable = false)
+    private Cargo cargo;
 
     @Column(nullable = false)
     private LocalDate fechaIngreso;
 
     @OneToMany(mappedBy = "usuario")
     private List<Producto> productos;
-
-    // Constructor vacío
-    public Usuario() {
-    }
 
     // Getters y setters
     public Long getId() {
@@ -68,11 +64,11 @@ public class Usuario {
         this.edad = edad;
     }
 
-    public String getCargo() {
+    public Cargo getCargo() {
         return cargo;
     }
 
-    public void setCargo(String cargo) {
+    public void setCargo(Cargo cargo) {
         this.cargo = cargo;
     }
 
@@ -83,4 +79,13 @@ public class Usuario {
     public void setFechaIngreso(LocalDate fechaIngreso) {
         this.fechaIngreso = fechaIngreso;
     }
+
+    public List<Producto> getProductos() {
+        return productos;
+    }
+
+    public void setProductos(List<Producto> productos) {
+        this.productos = productos;
+    }
 }
+

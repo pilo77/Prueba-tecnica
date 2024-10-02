@@ -1,6 +1,7 @@
 package com.example.inventario_automotriz.service.impl;
 
-import com.example.inventario_automotriz.dto.ProductoDTO;
+import com.example.inventario_automotriz.dto.request.ProductoRequestDTO;
+import com.example.inventario_automotriz.dto.response.ProductoResponseDTO;
 import com.example.inventario_automotriz.exception.ProductoNotFoundException;
 import com.example.inventario_automotriz.model.Producto;
 import com.example.inventario_automotriz.model.Usuario;
@@ -28,79 +29,78 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    public ProductoDTO crearProducto(ProductoDTO productoDTO) {
+    public ProductoResponseDTO crearProducto(ProductoRequestDTO productoRequestDTO) {
         // Verificar que no haya un producto con el mismo nombre
-        if (productoRepository.findByNombre(productoDTO.getNombre()).isPresent()) {
+        if (productoRepository.findByNombre(productoRequestDTO.getNombre()).isPresent()) {
             throw new IllegalArgumentException("Ya existe un producto con ese nombre.");
         }
 
         // Validar que la cantidad sea mayor o igual a 1
-        if (productoDTO.getCantidad() < 1) {
+        if (productoRequestDTO.getCantidad() < 1) {
             throw new IllegalArgumentException("La cantidad debe ser mayor o igual a 1.");
         }
 
         // Validar que la fecha de ingreso no sea futura
-        if (productoDTO.getFechaIngreso().isAfter(LocalDate.now())) {
+        if (productoRequestDTO.getFechaIngreso().isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("La fecha de ingreso no puede ser mayor a la fecha actual.");
         }
 
         // Verificar si el usuario existe
-        Usuario usuario = usuarioRepository.findById(productoDTO.getUsuarioId())
+        Usuario usuario = usuarioRepository.findById(productoRequestDTO.getUsuarioId())
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
         // Crear el producto
         Producto producto = new Producto();
-        producto.setNombre(productoDTO.getNombre());
-        producto.setCantidad(productoDTO.getCantidad());
-        producto.setFechaIngreso(productoDTO.getFechaIngreso());
+        producto.setNombre(productoRequestDTO.getNombre());
+        producto.setCantidad(productoRequestDTO.getCantidad());
+        producto.setFechaIngreso(productoRequestDTO.getFechaIngreso());
         producto.setUsuario(usuario);
 
         // Guardar el producto en la base de datos
         Producto nuevoProducto = productoRepository.save(producto);
-        return new ProductoDTO(nuevoProducto.getId(), nuevoProducto.getNombre(), nuevoProducto.getCantidad(),
-                nuevoProducto.getFechaIngreso(), nuevoProducto.getUsuario().getId());
+        return new ProductoResponseDTO(nuevoProducto.getId(), nuevoProducto.getNombre(), nuevoProducto.getCantidad(),
+                nuevoProducto.getFechaIngreso(), nuevoProducto.getUsuario().getId(), nuevoProducto.getFechaModificacion());
     }
 
-
     @Override
-    public List<ProductoDTO> obtenerTodosLosProductos() {
+    public List<ProductoResponseDTO> obtenerTodosLosProductos() {
         return productoRepository.findAll().stream()
-                .map(producto -> new ProductoDTO(producto.getId(), producto.getNombre(), producto.getCantidad(),
-                        producto.getFechaIngreso(), producto.getUsuario().getId(), producto.getFechaModificacion())) // Asegurarse de incluir la fecha de modificación
+                .map(producto -> new ProductoResponseDTO(producto.getId(), producto.getNombre(), producto.getCantidad(),
+                        producto.getFechaIngreso(), producto.getUsuario().getId(), producto.getFechaModificacion()))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<ProductoDTO> obtenerProductoPorId(Long id) {
+    public Optional<ProductoResponseDTO> obtenerProductoPorId(Long id) {
         return productoRepository.findById(id)
-                .map(producto -> new ProductoDTO(producto.getId(), producto.getNombre(), producto.getCantidad(),
-                        producto.getFechaIngreso(), producto.getUsuario().getId(), producto.getFechaModificacion())); // Incluir fecha de modificación
+                .map(producto -> new ProductoResponseDTO(producto.getId(), producto.getNombre(), producto.getCantidad(),
+                        producto.getFechaIngreso(), producto.getUsuario().getId(), producto.getFechaModificacion()));
     }
 
     @Override
-    public ProductoDTO actualizarProducto(ProductoDTO productoDTO) {
+    public ProductoResponseDTO actualizarProducto(Long id, ProductoRequestDTO productoRequestDTO) {
         // Verificar si el producto existe
-        Producto producto = productoRepository.findById(productoDTO.getId())
+        Producto producto = productoRepository.findById(id)
                 .orElseThrow(() -> new ProductoNotFoundException("Producto no encontrado"));
 
         // Validar que la cantidad sea mayor o igual a 1
-        if (productoDTO.getCantidad() < 1) {
+        if (productoRequestDTO.getCantidad() < 1) {
             throw new IllegalArgumentException("La cantidad debe ser mayor o igual a 1.");
         }
 
         // Validar que la fecha de ingreso no sea futura
-        if (productoDTO.getFechaIngreso().isAfter(LocalDate.now())) {
+        if (productoRequestDTO.getFechaIngreso().isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("La fecha de ingreso no puede ser mayor a la fecha actual.");
         }
 
         // Verificar si el usuario que modifica existe
-        Usuario usuario = usuarioRepository.findById(productoDTO.getUsuarioId())
+        Usuario usuario = usuarioRepository.findById(productoRequestDTO.getUsuarioId())
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
         // Actualizar los datos del producto
-        producto.setNombre(productoDTO.getNombre());
-        producto.setCantidad(productoDTO.getCantidad());
-        producto.setFechaIngreso(productoDTO.getFechaIngreso());
+        producto.setNombre(productoRequestDTO.getNombre());
+        producto.setCantidad(productoRequestDTO.getCantidad());
+        producto.setFechaIngreso(productoRequestDTO.getFechaIngreso());
         producto.setUsuario(usuario);
 
         // Registrar la fecha de modificación
@@ -109,21 +109,20 @@ public class ProductoServiceImpl implements ProductoService {
         // Guardar los cambios
         Producto productoActualizado = productoRepository.save(producto);
 
-        return new ProductoDTO(productoActualizado.getId(), productoActualizado.getNombre(),
+        return new ProductoResponseDTO(productoActualizado.getId(), productoActualizado.getNombre(),
                 productoActualizado.getCantidad(), productoActualizado.getFechaIngreso(),
                 productoActualizado.getUsuario().getId(), productoActualizado.getFechaModificacion());
     }
-    
+
     @Override
-    public List<ProductoDTO> buscarProductos(String nombre, Long usuarioId, LocalDate fechaIngreso, LocalDate fechaModificacion) {
+    public List<ProductoResponseDTO> buscarProductos(String nombre, Long usuarioId, LocalDate fechaIngreso, LocalDate fechaModificacion) {
         List<Producto> productos = productoRepository.buscarProductos(nombre, usuarioId, fechaIngreso, fechaModificacion);
 
         return productos.stream()
-                .map(producto -> new ProductoDTO(producto.getId(), producto.getNombre(), producto.getCantidad(),
+                .map(producto -> new ProductoResponseDTO(producto.getId(), producto.getNombre(), producto.getCantidad(),
                         producto.getFechaIngreso(), producto.getUsuario().getId(), producto.getFechaModificacion()))
                 .collect(Collectors.toList());
     }
-
 
     @Override
     public void eliminarProducto(Long id, Long usuarioId) {

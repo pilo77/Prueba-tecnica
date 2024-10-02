@@ -1,35 +1,22 @@
-package com.example.inventario_automotriz.dto;
+package com.example.inventario_automotriz.dto.response;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-public class UsuarioDTO {
+public class UsuarioResponseDTO {
 
     private Long id;
-
-    @NotNull(message = "El nombre no puede ser nulo")
     private String nombre;
-
-    @Email(message = "El correo debe ser válido")
-    @NotNull(message = "El correo es obligatorio")
     private String email;
-
-    @NotNull(message = "La edad es obligatoria")
-    private Integer edad;
-
-    @NotNull(message = "El cargo es obligatorio")
+    private int edad;
     private String cargo;
-
-    @NotNull(message = "La fecha de ingreso es obligatoria")
     private LocalDate fechaIngreso;
 
     // Constructor vacío
-    public UsuarioDTO() {
+    public UsuarioResponseDTO() {
     }
 
     // Constructor con parámetros
-    public UsuarioDTO(Long id, String nombre, String email, Integer edad, String cargo, LocalDate fechaIngreso) {
+    public UsuarioResponseDTO(Long id, String nombre, String email, int edad, String cargo, LocalDate fechaIngreso) {
         this.id = id;
         this.nombre = nombre;
         this.email = email;
@@ -63,11 +50,11 @@ public class UsuarioDTO {
         this.email = email;
     }
 
-    public Integer getEdad() {
+    public int getEdad() {
         return edad;
     }
 
-    public void setEdad(Integer edad) {
+    public void setEdad(int edad) {
         this.edad = edad;
     }
 

@@ -1,43 +1,21 @@
-package com.example.inventario_automotriz.dto;
+package com.example.inventario_automotriz.dto.response;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
-public class ProductoDTO {
+public class ProductoResponseDTO {
 
     private Long id;
-
-    @NotNull(message = "El nombre no puede ser nulo")
     private String nombre;
-
-    @Min(value = 1, message = "La cantidad debe ser mayor o igual a 1")
     private int cantidad;
-
-    @PastOrPresent(message = "La fecha de ingreso no puede ser futura")
     private LocalDate fechaIngreso;
-
-    @NotNull(message = "El usuario es obligatorio")
     private Long usuarioId;
-
-    private LocalDate fechaModificacion;  // Campo añadido para la fecha de modificación
+    private LocalDate fechaModificacion;  // Incluye la fecha de modificación
 
     // Constructor vacío
-    public ProductoDTO() {
-    }
+    public ProductoResponseDTO() {}
 
-    // Constructor sin fechaModificacion (para creación)
-    public ProductoDTO(Long id, String nombre, int cantidad, LocalDate fechaIngreso, Long usuarioId) {
-        this.id = id;
-        this.nombre = nombre;
-        this.cantidad = cantidad;
-        this.fechaIngreso = fechaIngreso;
-        this.usuarioId = usuarioId;
-    }
-
-    // Constructor con fechaModificacion (para actualización)
-    public ProductoDTO(Long id, String nombre, int cantidad, LocalDate fechaIngreso, Long usuarioId, LocalDate fechaModificacion) {
+    // Constructor completo
+    public ProductoResponseDTO(Long id, String nombre, int cantidad, LocalDate fechaIngreso, Long usuarioId, LocalDate fechaModificacion) {
         this.id = id;
         this.nombre = nombre;
         this.cantidad = cantidad;
@@ -95,4 +73,3 @@ public class ProductoDTO {
         this.fechaModificacion = fechaModificacion;
     }
 }
-

@@ -1,80 +1,89 @@
 package com.example.inventario_automotriz.service.impl;
 
-import com.example.inventario_automotriz.dto.UsuarioDTO;
+import com.example.inventario_automotriz.dto.request.UsuarioRequestDTO;
+import com.example.inventario_automotriz.dto.response.UsuarioResponseDTO;
+import com.example.inventario_automotriz.exception.UsuarioNotFoundException;
+import com.example.inventario_automotriz.model.Cargo;
 import com.example.inventario_automotriz.model.Usuario;
+import com.example.inventario_automotriz.repository.CargoRepository;
 import com.example.inventario_automotriz.repository.UsuarioRepository;
 import com.example.inventario_automotriz.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final CargoRepository cargoRepository;
 
     @Autowired
-    public UsuarioServiceImpl(UsuarioRepository usuarioRepository) {
+    public UsuarioServiceImpl(UsuarioRepository usuarioRepository, CargoRepository cargoRepository) {
         this.usuarioRepository = usuarioRepository;
+        this.cargoRepository = cargoRepository;
     }
 
     @Override
-    public UsuarioDTO crearUsuario(UsuarioDTO usuarioDTO) {
+    public UsuarioResponseDTO crearUsuario(UsuarioRequestDTO usuarioRequestDTO) {
+        Cargo cargo = cargoRepository.findById(usuarioRequestDTO.getCargoId())
+                .orElseThrow(() -> new IllegalArgumentException("Cargo no encontrado"));
+
         Usuario usuario = new Usuario();
-        usuario.setNombre(usuarioDTO.getNombre());
-        usuario.setEmail(usuarioDTO.getEmail());
-        usuario.setEdad(usuarioDTO.getEdad());
-        usuario.setCargo(usuarioDTO.getCargo());
-        usuario.setFechaIngreso(usuarioDTO.getFechaIngreso());
+        usuario.setNombre(usuarioRequestDTO.getNombre());
+        usuario.setEmail(usuarioRequestDTO.getEmail());
+        usuario.setEdad(usuarioRequestDTO.getEdad());
+        usuario.setCargo(cargo);
+        usuario.setFechaIngreso(usuarioRequestDTO.getFechaIngreso());
 
         Usuario nuevoUsuario = usuarioRepository.save(usuario);
-
-        return new UsuarioDTO(nuevoUsuario.getId(), nuevoUsuario.getNombre(), nuevoUsuario.getEmail(),
-                nuevoUsuario.getEdad(), nuevoUsuario.getCargo(), nuevoUsuario.getFechaIngreso());
+        return new UsuarioResponseDTO(nuevoUsuario.getId(), nuevoUsuario.getNombre(), nuevoUsuario.getEmail(),
+                nuevoUsuario.getEdad(), nuevoUsuario.getCargo().getNombre(), nuevoUsuario.getFechaIngreso());
     }
 
     @Override
-    public List<UsuarioDTO> obtenerTodosLosUsuarios() {
+    public List<UsuarioResponseDTO> obtenerTodosLosUsuarios() {
         return usuarioRepository.findAll().stream()
-                .map(usuario -> new UsuarioDTO(usuario.getId(), usuario.getNombre(), usuario.getEmail(),
-                        usuario.getEdad(), usuario.getCargo(), usuario.getFechaIngreso()))
+                .map(usuario -> new UsuarioResponseDTO(usuario.getId(), usuario.getNombre(), usuario.getEmail(),
+                        usuario.getEdad(), usuario.getCargo().getNombre(), usuario.getFechaIngreso()))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<UsuarioDTO> obtenerUsuarioPorId(Long id) {
-        return usuarioRepository.findById(id)
-                .map(usuario -> new UsuarioDTO(usuario.getId(), usuario.getNombre(), usuario.getEmail(),
-                        usuario.getEdad(), usuario.getCargo(), usuario.getFechaIngreso()));
+    public UsuarioResponseDTO obtenerUsuarioPorId(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado"));
+        return new UsuarioResponseDTO(usuario.getId(), usuario.getNombre(), usuario.getEmail(),
+                usuario.getEdad(), usuario.getCargo().getNombre(), usuario.getFechaIngreso());
     }
 
     @Override
-    public UsuarioDTO actualizarUsuario(UsuarioDTO usuarioDTO) {
-        Usuario usuario = usuarioRepository.findById(usuarioDTO.getId())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    public UsuarioResponseDTO actualizarUsuario(Long id, UsuarioRequestDTO usuarioRequestDTO) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado"));
 
-        usuario.setNombre(usuarioDTO.getNombre());
-        usuario.setEmail(usuarioDTO.getEmail());
-        usuario.setEdad(usuarioDTO.getEdad());
-        usuario.setCargo(usuarioDTO.getCargo());
-        usuario.setFechaIngreso(usuarioDTO.getFechaIngreso());
+        Cargo cargo = cargoRepository.findById(usuarioRequestDTO.getCargoId())
+                .orElseThrow(() -> new IllegalArgumentException("Cargo no encontrado"));
+
+        usuario.setNombre(usuarioRequestDTO.getNombre());
+        usuario.setEmail(usuarioRequestDTO.getEmail());
+        usuario.setEdad(usuarioRequestDTO.getEdad());
+        usuario.setCargo(cargo);
+        usuario.setFechaIngreso(usuarioRequestDTO.getFechaIngreso());
 
         Usuario usuarioActualizado = usuarioRepository.save(usuario);
-
-        return new UsuarioDTO(usuarioActualizado.getId(), usuarioActualizado.getNombre(), usuarioActualizado.getEmail(),
-                usuarioActualizado.getEdad(), usuarioActualizado.getCargo(), usuarioActualizado.getFechaIngreso());
+        return new UsuarioResponseDTO(usuarioActualizado.getId(), usuarioActualizado.getNombre(),
+                usuarioActualizado.getEmail(), usuarioActualizado.getEdad(), usuarioActualizado.getCargo().getNombre(),
+                usuarioActualizado.getFechaIngreso());
     }
 
     @Override
-    public void eliminarUsuario(Long id, String cargoUsuarioSolicitante) {
-        // Solo los administradores pueden eliminar usuarios
-        if (!"Administrador".equals(cargoUsuarioSolicitante)) {
-            throw new RuntimeException("Solo los administradores pueden eliminar usuarios.");
-        }
+    public void eliminarUsuario(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado"));
 
-        usuarioRepository.deleteById(id);
+        usuarioRepository.delete(usuario);
     }
 }

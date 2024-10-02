@@ -1,15 +1,14 @@
 package com.example.inventario_automotriz.service;
 
-import com.example.inventario_automotriz.dto.UsuarioDTO;
+import com.example.inventario_automotriz.dto.request.UsuarioRequestDTO;
+import com.example.inventario_automotriz.dto.response.UsuarioResponseDTO;
+
 import java.util.List;
-import java.util.Optional;
 
 public interface UsuarioService {
-    UsuarioDTO crearUsuario(UsuarioDTO usuarioDTO);
-    List<UsuarioDTO> obtenerTodosLosUsuarios();
-    Optional<UsuarioDTO> obtenerUsuarioPorId(Long id);
-    UsuarioDTO actualizarUsuario(UsuarioDTO usuarioDTO);
-
-
-    void eliminarUsuario(Long id, String cargoUsuarioSolicitante);
+    UsuarioResponseDTO crearUsuario(UsuarioRequestDTO usuarioRequestDTO);
+    List<UsuarioResponseDTO> obtenerTodosLosUsuarios();
+    UsuarioResponseDTO obtenerUsuarioPorId(Long id);
+    UsuarioResponseDTO actualizarUsuario(Long id, UsuarioRequestDTO usuarioRequestDTO);
+    void eliminarUsuario(Long id);
 }
