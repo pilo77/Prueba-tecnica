@@ -3,10 +3,13 @@ package com.example.inventario_automotriz.controller;
 import com.example.inventario_automotriz.dto.ProductoDTO;
 import com.example.inventario_automotriz.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/productos")
@@ -19,36 +22,40 @@ public class ProductoController {
         this.productoService = productoService;
     }
 
+    // Endpoint para crear un producto
     @PostMapping
-    public ResponseEntity<ProductoDTO> crearProducto(@RequestBody ProductoDTO productoDTO) {
+    public ResponseEntity<ProductoDTO> crearProducto(@Validated @RequestBody ProductoDTO productoDTO) {
         ProductoDTO nuevoProducto = productoService.crearProducto(productoDTO);
-        return ResponseEntity.ok(nuevoProducto);
+        return new ResponseEntity<>(nuevoProducto, HttpStatus.CREATED);
     }
 
+    // Endpoint para obtener todos los productos
     @GetMapping
     public ResponseEntity<List<ProductoDTO>> obtenerTodosLosProductos() {
         List<ProductoDTO> productos = productoService.obtenerTodosLosProductos();
-        return ResponseEntity.ok(productos);
+        return new ResponseEntity<>(productos, HttpStatus.OK);
     }
 
+    // Endpoint para obtener un producto por ID
     @GetMapping("/{id}")
     public ResponseEntity<ProductoDTO> obtenerProductoPorId(@PathVariable Long id) {
-        ProductoDTO producto = productoService.obtenerProductoPorId(id)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-        return ResponseEntity.ok(producto);
+        Optional<ProductoDTO> producto = productoService.obtenerProductoPorId(id);
+        return producto.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    // Endpoint para actualizar un producto
     @PutMapping("/{id}")
-    public ResponseEntity<ProductoDTO> actualizarProducto(@PathVariable Long id, @RequestBody ProductoDTO productoDTO) {
-        productoDTO.setId(id); // Asegurar que actualizamos el producto correcto
+    public ResponseEntity<ProductoDTO> actualizarProducto(@PathVariable Long id, @Validated @RequestBody ProductoDTO productoDTO) {
+        productoDTO.setId(id);  // Asegurarse de que el ID coincida
         ProductoDTO productoActualizado = productoService.actualizarProducto(productoDTO);
-        return ResponseEntity.ok(productoActualizado);
+        return new ResponseEntity<>(productoActualizado, HttpStatus.OK);
     }
 
+    // Endpoint para eliminar un producto
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarProducto(@PathVariable Long id) {
-        productoService.eliminarProducto(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> eliminarProducto(@PathVariable Long id, @RequestParam Long usuarioId) {
+        productoService.eliminarProducto(id, usuarioId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 }

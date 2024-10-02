@@ -3,7 +3,9 @@ package com.example.inventario_automotriz.service.impl;
 import com.example.inventario_automotriz.dto.ProductoDTO;
 import com.example.inventario_automotriz.exception.ProductoNotFoundException;
 import com.example.inventario_automotriz.model.Producto;
+import com.example.inventario_automotriz.model.Usuario;
 import com.example.inventario_automotriz.repository.ProductoRepository;
+import com.example.inventario_automotriz.repository.UsuarioRepository;
 import com.example.inventario_automotriz.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,10 +19,12 @@ import java.util.stream.Collectors;
 public class ProductoServiceImpl implements ProductoService {
 
     private final ProductoRepository productoRepository;
+    private final UsuarioRepository usuarioRepository;
 
     @Autowired
-    public ProductoServiceImpl(ProductoRepository productoRepository) {
+    public ProductoServiceImpl(ProductoRepository productoRepository, UsuarioRepository usuarioRepository) {
         this.productoRepository = productoRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     @Override
@@ -35,11 +39,18 @@ public class ProductoServiceImpl implements ProductoService {
             throw new IllegalArgumentException("La fecha de ingreso no puede ser futura.");
         }
 
+        // Verificar si el usuario existe
+        Usuario usuario = usuarioRepository.findById(productoDTO.getUsuarioId())
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+
+        // Crear el producto
         Producto producto = new Producto();
         producto.setNombre(productoDTO.getNombre());
         producto.setCantidad(productoDTO.getCantidad());
         producto.setFechaIngreso(productoDTO.getFechaIngreso());
+        producto.setUsuario(usuario);
 
+        // Guardar el producto en la base de datos
         Producto nuevoProducto = productoRepository.save(producto);
         return new ProductoDTO(nuevoProducto.getId(), nuevoProducto.getNombre(), nuevoProducto.getCantidad(),
                 nuevoProducto.getFechaIngreso(), nuevoProducto.getUsuario().getId());
@@ -65,9 +76,14 @@ public class ProductoServiceImpl implements ProductoService {
         Producto producto = productoRepository.findById(productoDTO.getId())
                 .orElseThrow(() -> new ProductoNotFoundException("Producto no encontrado"));
 
+        // Verificar si el usuario que está modificando existe
+        Usuario usuario = usuarioRepository.findById(productoDTO.getUsuarioId())
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+
         producto.setNombre(productoDTO.getNombre());
         producto.setCantidad(productoDTO.getCantidad());
         producto.setFechaIngreso(productoDTO.getFechaIngreso());
+        producto.setUsuario(usuario);
 
         Producto productoActualizado = productoRepository.save(producto);
         return new ProductoDTO(productoActualizado.getId(), productoActualizado.getNombre(),
@@ -75,7 +91,15 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    public void eliminarProducto(Long id) {
+    public void eliminarProducto(Long id, Long usuarioId) {
+        Producto producto = productoRepository.findById(id)
+                .orElseThrow(() -> new ProductoNotFoundException("Producto no encontrado"));
+
+        // Verificar que el usuario que intenta eliminar sea el mismo que creó el producto
+        if (!producto.getUsuario().getId().equals(usuarioId)) {
+            throw new IllegalArgumentException("No tienes permiso para eliminar este producto.");
+        }
+
         productoRepository.deleteById(id);
     }
 }

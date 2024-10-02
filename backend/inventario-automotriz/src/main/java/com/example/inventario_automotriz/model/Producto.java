@@ -25,7 +25,7 @@ public class Producto {
     @Column(nullable = false)
     private LocalDate fechaIngreso; // Fecha de ingreso
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario; // Usuario que realiza el registro
 
