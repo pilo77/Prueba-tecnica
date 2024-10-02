@@ -89,17 +89,21 @@ public class ProductoServiceImpl implements ProductoService {
         return new ProductoDTO(productoActualizado.getId(), productoActualizado.getNombre(),
                 productoActualizado.getCantidad(), productoActualizado.getFechaIngreso(), productoActualizado.getUsuario().getId());
     }
-
     @Override
     public void eliminarProducto(Long id, Long usuarioId) {
+        // Obtener el producto por ID
         Producto producto = productoRepository.findById(id)
                 .orElseThrow(() -> new ProductoNotFoundException("Producto no encontrado"));
 
         // Verificar que el usuario que intenta eliminar sea el mismo que creó el producto
-        if (!producto.getUsuario().getId().equals(usuarioId)) {
+        Long usuarioCreadorId = producto.getUsuario().getId();
+
+        // Si el usuario que intenta eliminar no es el creador, lanzar excepción
+        if (!usuarioCreadorId.equals(usuarioId)) {
             throw new IllegalArgumentException("No tienes permiso para eliminar este producto.");
         }
 
+        // Si todo está bien, eliminar el producto
         productoRepository.deleteById(id);
     }
 }
