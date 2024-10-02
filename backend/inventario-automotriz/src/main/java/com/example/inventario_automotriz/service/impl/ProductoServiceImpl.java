@@ -113,6 +113,7 @@ public class ProductoServiceImpl implements ProductoService {
                 productoActualizado.getCantidad(), productoActualizado.getFechaIngreso(),
                 productoActualizado.getUsuario().getId(), productoActualizado.getFechaModificacion());
     }
+    
     @Override
     public List<ProductoDTO> buscarProductos(String nombre, Long usuarioId, LocalDate fechaIngreso, LocalDate fechaModificacion) {
         List<Producto> productos = productoRepository.buscarProductos(nombre, usuarioId, fechaIngreso, fechaModificacion);

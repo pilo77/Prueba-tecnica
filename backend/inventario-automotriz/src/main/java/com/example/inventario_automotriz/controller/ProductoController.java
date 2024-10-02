@@ -2,6 +2,7 @@ package com.example.inventario_automotriz.controller;
 
 import com.example.inventario_automotriz.dto.ProductoDTO;
 import com.example.inventario_automotriz.service.ProductoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +25,11 @@ public class ProductoController {
     }
 
     // Endpoint para crear un producto
-    @PostMapping
-    public ResponseEntity<ProductoDTO> crearProducto(@Validated @RequestBody ProductoDTO productoDTO) {
+    @PostMapping("/productos")
+    public ResponseEntity<ProductoDTO> crearProducto(@RequestBody @Valid ProductoDTO productoDTO) {
+        // Validaciones y lógica para creación
         ProductoDTO nuevoProducto = productoService.crearProducto(productoDTO);
-        return new ResponseEntity<>(nuevoProducto, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(nuevoProducto);
     }
 
     // Endpoint para obtener todos los productos
@@ -56,11 +58,16 @@ public class ProductoController {
     }
 
     // Endpoint para actualizar un producto
-    @PutMapping("/{id}")
-    public ResponseEntity<ProductoDTO> actualizarProducto(@PathVariable Long id, @Validated @RequestBody ProductoDTO productoDTO) {
-        productoDTO.setId(id);  // Asegurarse de que el ID coincida
+    @PutMapping("/productos/{id}")
+    public ResponseEntity<ProductoDTO> actualizarProducto(
+            @PathVariable Long id,
+            @RequestBody @Valid ProductoDTO productoDTO) {
+
+        // Aseguramos que no se modifique manualmente la fecha de modificación
+        productoDTO.setFechaModificacion(LocalDate.now());
+
         ProductoDTO productoActualizado = productoService.actualizarProducto(productoDTO);
-        return new ResponseEntity<>(productoActualizado, HttpStatus.OK);
+        return ResponseEntity.ok(productoActualizado);
     }
 
     // Eliminar un producto solo por el usuario que lo creó
