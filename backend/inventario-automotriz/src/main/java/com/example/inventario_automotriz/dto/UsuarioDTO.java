@@ -1,34 +1,41 @@
-package com.example.inventario_automotriz.model;
+package com.example.inventario_automotriz.dto;
 
-import jakarta.persistence.*;
-
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "usuario")
-public class Usuario {
+public class UsuarioDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @NotNull(message = "El nombre no puede ser nulo")
     private String nombre;
 
-    @Column(nullable = false)
+    @Email(message = "El correo debe ser válido")
+    @NotNull(message = "El correo es obligatorio")
     private String email;
 
-    @Column(nullable = false)
-    private int edad;
+    @NotNull(message = "La edad es obligatoria")
+    private Integer edad;
 
-    @Column(nullable = false)
+    @NotNull(message = "El cargo es obligatorio")
     private String cargo;
 
-    @Column(nullable = false)
+    @NotNull(message = "La fecha de ingreso es obligatoria")
     private LocalDate fechaIngreso;
 
     // Constructor vacío
-    public Usuario() {
+    public UsuarioDTO() {
+    }
+
+    // Constructor con parámetros
+    public UsuarioDTO(Long id, String nombre, String email, Integer edad, String cargo, LocalDate fechaIngreso) {
+        this.id = id;
+        this.nombre = nombre;
+        this.email = email;
+        this.edad = edad;
+        this.cargo = cargo;
+        this.fechaIngreso = fechaIngreso;
     }
 
     // Getters y setters
@@ -56,11 +63,11 @@ public class Usuario {
         this.email = email;
     }
 
-    public int getEdad() {
+    public Integer getEdad() {
         return edad;
     }
 
-    public void setEdad(int edad) {
+    public void setEdad(Integer edad) {
         this.edad = edad;
     }
 
