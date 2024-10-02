@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,6 +43,16 @@ public class ProductoController {
         Optional<ProductoDTO> producto = productoService.obtenerProductoPorId(id);
         return producto.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+    @GetMapping("/buscar")
+    public ResponseEntity<List<ProductoDTO>> buscarProductos(
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) Long usuarioId,
+            @RequestParam(required = false) LocalDate fechaIngreso,
+            @RequestParam(required = false) LocalDate fechaModificacion) {
+
+        List<ProductoDTO> productos = productoService.buscarProductos(nombre, usuarioId, fechaIngreso, fechaModificacion);
+        return ResponseEntity.ok(productos);
     }
 
     // Endpoint para actualizar un producto

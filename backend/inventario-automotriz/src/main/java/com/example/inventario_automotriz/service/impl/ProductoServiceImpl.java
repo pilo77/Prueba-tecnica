@@ -41,7 +41,7 @@ public class ProductoServiceImpl implements ProductoService {
 
         // Validar que la fecha de ingreso no sea futura
         if (productoDTO.getFechaIngreso().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("La fecha de ingreso no puede ser futura.");
+            throw new IllegalArgumentException("La fecha de ingreso no puede ser mayor a la fecha actual.");
         }
 
         // Verificar si el usuario existe
@@ -90,7 +90,7 @@ public class ProductoServiceImpl implements ProductoService {
 
         // Validar que la fecha de ingreso no sea futura
         if (productoDTO.getFechaIngreso().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("La fecha de ingreso no puede ser futura.");
+            throw new IllegalArgumentException("La fecha de ingreso no puede ser mayor a la fecha actual.");
         }
 
         // Verificar si el usuario que modifica existe
@@ -102,7 +102,9 @@ public class ProductoServiceImpl implements ProductoService {
         producto.setCantidad(productoDTO.getCantidad());
         producto.setFechaIngreso(productoDTO.getFechaIngreso());
         producto.setUsuario(usuario);
-        producto.setFechaModificacion(LocalDate.now()); 
+
+        // Registrar la fecha de modificación
+        producto.setFechaModificacion(LocalDate.now());
 
         // Guardar los cambios
         Producto productoActualizado = productoRepository.save(producto);
@@ -111,6 +113,16 @@ public class ProductoServiceImpl implements ProductoService {
                 productoActualizado.getCantidad(), productoActualizado.getFechaIngreso(),
                 productoActualizado.getUsuario().getId(), productoActualizado.getFechaModificacion());
     }
+    @Override
+    public List<ProductoDTO> buscarProductos(String nombre, Long usuarioId, LocalDate fechaIngreso, LocalDate fechaModificacion) {
+        List<Producto> productos = productoRepository.buscarProductos(nombre, usuarioId, fechaIngreso, fechaModificacion);
+
+        return productos.stream()
+                .map(producto -> new ProductoDTO(producto.getId(), producto.getNombre(), producto.getCantidad(),
+                        producto.getFechaIngreso(), producto.getUsuario().getId(), producto.getFechaModificacion()))
+                .collect(Collectors.toList());
+    }
+
 
     @Override
     public void eliminarProducto(Long id, Long usuarioId) {
