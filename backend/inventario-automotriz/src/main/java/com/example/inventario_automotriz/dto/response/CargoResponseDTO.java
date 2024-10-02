@@ -5,17 +5,17 @@ public class CargoResponseDTO {
     private Long id;
     private String nombre;
 
-    // Constructor vacío
+
     public CargoResponseDTO() {
     }
 
-    // Constructor con parámetros
+
     public CargoResponseDTO(Long id, String nombre) {
         this.id = id;
         this.nombre = nombre;
     }
 
-    // Getters y setters
+
     public Long getId() {
         return id;
     }

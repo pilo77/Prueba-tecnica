@@ -11,11 +11,11 @@ public class UsuarioResponseDTO {
     private String cargo;
     private LocalDate fechaIngreso;
 
-    // Constructor vacío
+
     public UsuarioResponseDTO() {
     }
 
-    // Constructor con parámetros
+
     public UsuarioResponseDTO(Long id, String nombre, String email, int edad, String cargo, LocalDate fechaIngreso) {
         this.id = id;
         this.nombre = nombre;
@@ -25,7 +25,7 @@ public class UsuarioResponseDTO {
         this.fechaIngreso = fechaIngreso;
     }
 
-    // Getters y setters
+
     public Long getId() {
         return id;
     }

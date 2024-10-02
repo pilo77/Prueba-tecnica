@@ -31,10 +31,10 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario")
     private List<Producto> productos;
 
-    // Constructor vacío
+
     public Usuario() {}
 
-    // Constructor con parámetros
+
     public Usuario(Long id, String nombre, String email, int edad, Cargo cargo, LocalDate fechaIngreso) {
         this.id = id;
         this.nombre = nombre;
@@ -44,7 +44,7 @@ public class Usuario {
         this.fechaIngreso = fechaIngreso;
     }
 
-    // Getters y setters
+
     public Long getId() {
         return id;
     }

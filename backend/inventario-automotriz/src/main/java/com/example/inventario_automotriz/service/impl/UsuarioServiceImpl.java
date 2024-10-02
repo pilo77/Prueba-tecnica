@@ -11,6 +11,7 @@ import com.example.inventario_automotriz.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,8 +29,25 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public UsuarioResponseDTO crearUsuario(UsuarioRequestDTO usuarioRequestDTO) {
+
+        if (usuarioRequestDTO.getEdad() < 0) {
+            throw new IllegalArgumentException("La edad no puede ser negativa");
+        }
+
+
+        if (usuarioRepository.findByEmail(usuarioRequestDTO.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("Ya existe un usuario con ese correo");
+        }
+
+
+        if (usuarioRequestDTO.getFechaIngreso().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("La fecha de ingreso no puede ser en el futuro");
+        }
+
+
         Cargo cargo = cargoRepository.findById(usuarioRequestDTO.getCargoId())
                 .orElseThrow(() -> new IllegalArgumentException("Cargo no encontrado"));
+
 
         Usuario usuario = new Usuario();
         usuario.setNombre(usuarioRequestDTO.getNombre());
@@ -38,10 +56,20 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuario.setCargo(cargo);
         usuario.setFechaIngreso(usuarioRequestDTO.getFechaIngreso());
 
+
         Usuario nuevoUsuario = usuarioRepository.save(usuario);
-        return new UsuarioResponseDTO(nuevoUsuario.getId(), nuevoUsuario.getNombre(), nuevoUsuario.getEmail(),
-                nuevoUsuario.getEdad(), nuevoUsuario.getCargo().getNombre(), nuevoUsuario.getFechaIngreso());
+
+
+        return new UsuarioResponseDTO(
+                nuevoUsuario.getId(),
+                nuevoUsuario.getNombre(),
+                nuevoUsuario.getEmail(),
+                nuevoUsuario.getEdad(),
+                nuevoUsuario.getCargo().getNombre(),
+                nuevoUsuario.getFechaIngreso()
+        );
     }
+
 
     @Override
     public List<UsuarioResponseDTO> obtenerTodosLosUsuarios() {

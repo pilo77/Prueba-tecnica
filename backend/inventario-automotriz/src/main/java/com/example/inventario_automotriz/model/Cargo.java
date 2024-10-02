@@ -17,16 +17,16 @@ public class Cargo {
     @OneToMany(mappedBy = "cargo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Usuario> usuarios;
 
-    // Constructor vacío
+
     public Cargo() {}
 
-    // Constructor con parámetros (id y nombre)
+
     public Cargo(Long id, String nombre) {
         this.id = id;
         this.nombre = nombre;
     }
 
-    // Getters y setters
+
     public Long getId() {
         return id;
     }

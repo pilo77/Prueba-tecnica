@@ -1,6 +1,7 @@
 package com.example.inventario_automotriz.dto.request;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -13,8 +14,9 @@ public class UsuarioRequestDTO {
     @NotNull(message = "El correo es obligatorio")
     private String email;
 
-    @NotNull(message = "La edad no puede ser nula")
-    private int edad;
+    @Min(value = 0, message = "La edad no puede ser menor que 0")
+    @NotNull(message = "La edad es obligatoria")
+    private Integer edad;
 
     @NotNull(message = "El cargo es obligatorio")
     private Long cargoId;
@@ -22,7 +24,7 @@ public class UsuarioRequestDTO {
     @NotNull(message = "La fecha de ingreso no puede ser nula")
     private LocalDate fechaIngreso;
 
-    // Constructor vacío
+
     public UsuarioRequestDTO() {}
 
 
@@ -34,7 +36,7 @@ public class UsuarioRequestDTO {
         this.fechaIngreso = fechaIngreso;
     }
 
-    // Getters y setters
+
     public String getNombre() {
         return nombre;
     }

@@ -19,7 +19,7 @@ public class ProductoRequestDTO {
     @NotNull(message = "El usuario es obligatorio")
     private Long usuarioId;
 
-    // Constructor vacío
+
     public ProductoRequestDTO() {}
     public ProductoRequestDTO(String nombre, int cantidad, LocalDate fechaIngreso, Long usuarioId) {
         this.nombre = nombre;
@@ -29,7 +29,6 @@ public class ProductoRequestDTO {
     }
 
 
-    // Getters y setters
     public String getNombre() {
         return nombre;
     }

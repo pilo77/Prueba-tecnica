@@ -26,10 +26,10 @@ public class Producto {
     @Column
     private LocalDate fechaModificacion;
 
-    // Constructor vacío
+
     public Producto() {}
 
-    // Constructor con parámetros
+
     public Producto(Long id, String nombre, int cantidad, LocalDate fechaIngreso, Usuario usuario, LocalDate fechaModificacion) {
         this.id = id;
         this.nombre = nombre;
@@ -39,7 +39,7 @@ public class Producto {
         this.fechaModificacion = fechaModificacion;
     }
 
-    // Getters y setters
+
     public Long getId() {
         return id;
     }

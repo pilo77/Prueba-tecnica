@@ -11,10 +11,10 @@ public class ProductoResponseDTO {
     private Long usuarioId;
     private LocalDate fechaModificacion;  // Incluye la fecha de modificación
 
-    // Constructor vacío
+
     public ProductoResponseDTO() {}
 
-    // Constructor completo
+
     public ProductoResponseDTO(Long id, String nombre, int cantidad, LocalDate fechaIngreso, Long usuarioId, LocalDate fechaModificacion) {
         this.id = id;
         this.nombre = nombre;
@@ -24,7 +24,7 @@ public class ProductoResponseDTO {
         this.fechaModificacion = fechaModificacion;
     }
 
-    // Getters y setters
+
     public Long getId() {
         return id;
     }
