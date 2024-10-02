@@ -24,21 +24,21 @@ public class ProductoController {
         this.productoService = productoService;
     }
 
-    // Endpoint para crear un nuevo producto
+    // **1. Crear un nuevo producto**
     @PostMapping
     public ResponseEntity<ProductoResponseDTO> crearProducto(@RequestBody @Valid ProductoRequestDTO productoRequestDTO) {
         ProductoResponseDTO nuevoProducto = productoService.crearProducto(productoRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoProducto);
     }
 
-    // Endpoint para obtener todos los productos
+    // **2. Obtener todos los productos**
     @GetMapping
     public ResponseEntity<List<ProductoResponseDTO>> obtenerTodosLosProductos() {
         List<ProductoResponseDTO> productos = productoService.obtenerTodosLosProductos();
         return new ResponseEntity<>(productos, HttpStatus.OK);
     }
 
-    // Endpoint para obtener un producto por su ID
+    // **3. Obtener un producto por su ID**
     @GetMapping("/{id}")
     public ResponseEntity<ProductoResponseDTO> obtenerProductoPorId(@PathVariable Long id) {
         Optional<ProductoResponseDTO> producto = productoService.obtenerProductoPorId(id);
@@ -46,7 +46,7 @@ public class ProductoController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    // Endpoint para actualizar un producto
+    // **4. Actualizar un producto**
     @PutMapping("/{id}")
     public ResponseEntity<ProductoResponseDTO> actualizarProducto(
             @PathVariable Long id,
@@ -56,7 +56,7 @@ public class ProductoController {
         return ResponseEntity.ok(productoActualizado);
     }
 
-    // Endpoint para buscar productos con filtros (nombre, usuario, fecha de ingreso, fecha de modificación)
+    // **5. Buscar productos con filtros (nombre, usuario, fecha de ingreso, fecha de modificación)**
     @GetMapping("/buscar")
     public ResponseEntity<List<ProductoResponseDTO>> buscarProductos(
             @RequestParam(required = false) String nombre,
@@ -68,7 +68,7 @@ public class ProductoController {
         return ResponseEntity.ok(productos);
     }
 
-    // Endpoint para eliminar un producto (solo el usuario que lo creó)
+    // **6. Eliminar un producto (solo el usuario que lo creó)**
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarProducto(@PathVariable Long id, @RequestParam Long usuarioId) {
         productoService.eliminarProducto(id, usuarioId);

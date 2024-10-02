@@ -65,8 +65,13 @@ public class ProductoServiceImpl implements ProductoService {
     @Override
     public List<ProductoResponseDTO> obtenerTodosLosProductos() {
         return productoRepository.findAll().stream()
-                .map(producto -> new ProductoResponseDTO(producto.getId(), producto.getNombre(), producto.getCantidad(),
-                        producto.getFechaIngreso(), producto.getUsuario().getId(), producto.getFechaModificacion()))
+                .map(producto -> new ProductoResponseDTO(
+                        producto.getId(),
+                        producto.getNombre(),
+                        producto.getCantidad(),
+                        producto.getFechaIngreso(),
+                        producto.getUsuario().getId(),
+                        producto.getFechaModificacion()))
                 .collect(Collectors.toList());
     }
 

@@ -10,7 +10,7 @@ public class Producto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String nombre;
 
     @Column(nullable = false)
@@ -23,10 +23,8 @@ public class Producto {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    // Nuevo campo para la fecha de modificación
     @Column
     private LocalDate fechaModificacion;
-
     // Getters y setters
 
     public Long getId() {
