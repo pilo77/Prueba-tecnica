@@ -1,39 +1,34 @@
 package com.example.inventario_automotriz.model;
 
 import jakarta.persistence.*;
-
-
 import java.time.LocalDate;
 
-
 @Entity
-@Table(name = "producto", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "nombre") // Restricción para evitar nombres duplicados
-})
 public class Producto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String nombre;
 
     @Column(nullable = false)
-    private int cantidad; // La cantidad debe ser un entero
+    private int cantidad;
 
     @Column(nullable = false)
-    private LocalDate fechaIngreso; // Fecha de ingreso
+    private LocalDate fechaIngreso;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario; // Usuario que realiza el registro
+    private Usuario usuario;
 
-    // Constructor vacío
-    public Producto() {
-    }
+    // Nuevo campo para la fecha de modificación
+    @Column
+    private LocalDate fechaModificacion;
 
     // Getters y setters
+
     public Long getId() {
         return id;
     }
@@ -73,6 +68,12 @@ public class Producto {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
+
+    public LocalDate getFechaModificacion() {
+        return fechaModificacion;
+    }
+
+    public void setFechaModificacion(LocalDate fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
+    }
 }
-
-

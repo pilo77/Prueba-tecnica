@@ -21,17 +21,29 @@ public class ProductoDTO {
     @NotNull(message = "El usuario es obligatorio")
     private Long usuarioId;
 
+    private LocalDate fechaModificacion;  // Campo añadido para la fecha de modificación
+
     // Constructor vacío
     public ProductoDTO() {
     }
 
-    // Constructor con parámetros
+    // Constructor sin fechaModificacion (para creación)
     public ProductoDTO(Long id, String nombre, int cantidad, LocalDate fechaIngreso, Long usuarioId) {
         this.id = id;
         this.nombre = nombre;
         this.cantidad = cantidad;
         this.fechaIngreso = fechaIngreso;
         this.usuarioId = usuarioId;
+    }
+
+    // Constructor con fechaModificacion (para actualización)
+    public ProductoDTO(Long id, String nombre, int cantidad, LocalDate fechaIngreso, Long usuarioId, LocalDate fechaModificacion) {
+        this.id = id;
+        this.nombre = nombre;
+        this.cantidad = cantidad;
+        this.fechaIngreso = fechaIngreso;
+        this.usuarioId = usuarioId;
+        this.fechaModificacion = fechaModificacion;
     }
 
     // Getters y setters
@@ -74,4 +86,13 @@ public class ProductoDTO {
     public void setUsuarioId(Long usuarioId) {
         this.usuarioId = usuarioId;
     }
+
+    public LocalDate getFechaModificacion() {
+        return fechaModificacion;
+    }
+
+    public void setFechaModificacion(LocalDate fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
+    }
 }
+

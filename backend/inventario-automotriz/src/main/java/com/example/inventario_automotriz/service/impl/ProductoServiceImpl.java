@@ -34,6 +34,11 @@ public class ProductoServiceImpl implements ProductoService {
             throw new IllegalArgumentException("Ya existe un producto con ese nombre.");
         }
 
+        // Validar que la cantidad sea mayor o igual a 1
+        if (productoDTO.getCantidad() < 1) {
+            throw new IllegalArgumentException("La cantidad debe ser mayor o igual a 1.");
+        }
+
         // Validar que la fecha de ingreso no sea futura
         if (productoDTO.getFechaIngreso().isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("La fecha de ingreso no puede ser futura.");
@@ -56,11 +61,12 @@ public class ProductoServiceImpl implements ProductoService {
                 nuevoProducto.getFechaIngreso(), nuevoProducto.getUsuario().getId());
     }
 
+
     @Override
     public List<ProductoDTO> obtenerTodosLosProductos() {
         return productoRepository.findAll().stream()
                 .map(producto -> new ProductoDTO(producto.getId(), producto.getNombre(), producto.getCantidad(),
-                        producto.getFechaIngreso(), producto.getUsuario().getId()))
+                        producto.getFechaIngreso(), producto.getUsuario().getId(), producto.getFechaModificacion())) // Asegurarse de incluir la fecha de modificación
                 .collect(Collectors.toList());
     }
 
@@ -68,27 +74,44 @@ public class ProductoServiceImpl implements ProductoService {
     public Optional<ProductoDTO> obtenerProductoPorId(Long id) {
         return productoRepository.findById(id)
                 .map(producto -> new ProductoDTO(producto.getId(), producto.getNombre(), producto.getCantidad(),
-                        producto.getFechaIngreso(), producto.getUsuario().getId()));
+                        producto.getFechaIngreso(), producto.getUsuario().getId(), producto.getFechaModificacion())); // Incluir fecha de modificación
     }
 
     @Override
     public ProductoDTO actualizarProducto(ProductoDTO productoDTO) {
+        // Verificar si el producto existe
         Producto producto = productoRepository.findById(productoDTO.getId())
                 .orElseThrow(() -> new ProductoNotFoundException("Producto no encontrado"));
 
-        // Verificar si el usuario que está modificando existe
+        // Validar que la cantidad sea mayor o igual a 1
+        if (productoDTO.getCantidad() < 1) {
+            throw new IllegalArgumentException("La cantidad debe ser mayor o igual a 1.");
+        }
+
+        // Validar que la fecha de ingreso no sea futura
+        if (productoDTO.getFechaIngreso().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("La fecha de ingreso no puede ser futura.");
+        }
+
+        // Verificar si el usuario que modifica existe
         Usuario usuario = usuarioRepository.findById(productoDTO.getUsuarioId())
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
+        // Actualizar los datos del producto
         producto.setNombre(productoDTO.getNombre());
         producto.setCantidad(productoDTO.getCantidad());
         producto.setFechaIngreso(productoDTO.getFechaIngreso());
         producto.setUsuario(usuario);
+        producto.setFechaModificacion(LocalDate.now()); 
 
+        // Guardar los cambios
         Producto productoActualizado = productoRepository.save(producto);
+
         return new ProductoDTO(productoActualizado.getId(), productoActualizado.getNombre(),
-                productoActualizado.getCantidad(), productoActualizado.getFechaIngreso(), productoActualizado.getUsuario().getId());
+                productoActualizado.getCantidad(), productoActualizado.getFechaIngreso(),
+                productoActualizado.getUsuario().getId(), productoActualizado.getFechaModificacion());
     }
+
     @Override
     public void eliminarProducto(Long id, Long usuarioId) {
         // Obtener el producto por ID
@@ -98,7 +121,7 @@ public class ProductoServiceImpl implements ProductoService {
         // Verificar que el usuario que intenta eliminar sea el mismo que creó el producto
         Long usuarioCreadorId = producto.getUsuario().getId();
 
-        // Si el usuario que intenta eliminar no es el creador, lanzar excepción
+        // Comparar correctamente los IDs
         if (!usuarioCreadorId.equals(usuarioId)) {
             throw new IllegalArgumentException("No tienes permiso para eliminar este producto.");
         }
@@ -106,4 +129,5 @@ public class ProductoServiceImpl implements ProductoService {
         // Si todo está bien, eliminar el producto
         productoRepository.deleteById(id);
     }
+
 }

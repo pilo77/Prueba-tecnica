@@ -52,10 +52,11 @@ public class ProductoController {
         return new ResponseEntity<>(productoActualizado, HttpStatus.OK);
     }
 
-    // Endpoint para eliminar un producto
+    // Eliminar un producto solo por el usuario que lo creó
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarProducto(@PathVariable Long id, @RequestParam Long usuarioId) {
         productoService.eliminarProducto(id, usuarioId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();  // 204 No Content cuando se elimina correctamente
     }
 }
+
