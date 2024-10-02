@@ -81,7 +81,6 @@ public class ProductoServiceImpl implements ProductoService {
                 .map(producto -> new ProductoResponseDTO(producto.getId(), producto.getNombre(), producto.getCantidad(),
                         producto.getFechaIngreso(), producto.getUsuario().getId(), producto.getFechaModificacion()));
     }
-
     @Override
     public ProductoResponseDTO actualizarProducto(Long id, ProductoRequestDTO productoRequestDTO) {
         // Verificar si el producto existe
@@ -113,6 +112,11 @@ public class ProductoServiceImpl implements ProductoService {
 
         // Guardar los cambios
         Producto productoActualizado = productoRepository.save(producto);
+
+        // Asegurarse de que productoActualizado no sea null
+        if (productoActualizado == null) {
+            throw new IllegalArgumentException("Producto no pudo ser actualizado correctamente.");
+        }
 
         return new ProductoResponseDTO(productoActualizado.getId(), productoActualizado.getNombre(),
                 productoActualizado.getCantidad(), productoActualizado.getFechaIngreso(),

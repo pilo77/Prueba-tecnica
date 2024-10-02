@@ -45,6 +45,7 @@ public class CargoServiceImpl implements CargoService {
         return new CargoResponseDTO(cargo.getId(), cargo.getNombre());
     }
 
+
     @Override
     public CargoResponseDTO actualizarCargo(Long id, CargoRequestDTO cargoRequestDTO) {
         Cargo cargo = cargoRepository.findById(id)

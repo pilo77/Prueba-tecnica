@@ -22,6 +22,18 @@ public class UsuarioRequestDTO {
     @NotNull(message = "La fecha de ingreso no puede ser nula")
     private LocalDate fechaIngreso;
 
+    // Constructor vacío
+    public UsuarioRequestDTO() {}
+
+
+    public UsuarioRequestDTO(String nombre, String email, int edad, Long cargoId, LocalDate fechaIngreso) {
+        this.nombre = nombre;
+        this.email = email;
+        this.edad = edad;
+        this.cargoId = cargoId;
+        this.fechaIngreso = fechaIngreso;
+    }
+
     // Getters y setters
     public String getNombre() {
         return nombre;

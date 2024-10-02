@@ -75,9 +75,10 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         Usuario usuarioActualizado = usuarioRepository.save(usuario);
         return new UsuarioResponseDTO(usuarioActualizado.getId(), usuarioActualizado.getNombre(),
-                usuarioActualizado.getEmail(), usuarioActualizado.getEdad(), usuarioActualizado.getCargo().getNombre(),
-                usuarioActualizado.getFechaIngreso());
+                usuarioActualizado.getEmail(), usuarioActualizado.getEdad(),
+                usuarioActualizado.getCargo().getNombre(), usuarioActualizado.getFechaIngreso());
     }
+
 
     @Override
     public void eliminarUsuario(Long id) {

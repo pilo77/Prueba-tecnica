@@ -21,6 +21,13 @@ public class ProductoRequestDTO {
 
     // Constructor vacío
     public ProductoRequestDTO() {}
+    public ProductoRequestDTO(String nombre, int cantidad, LocalDate fechaIngreso, Long usuarioId) {
+        this.nombre = nombre;
+        this.cantidad = cantidad;
+        this.fechaIngreso = fechaIngreso;
+        this.usuarioId = usuarioId;
+    }
+
 
     // Getters y setters
     public String getNombre() {
