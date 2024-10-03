@@ -1,0 +1,7 @@
+<form [formGroup]="cargoForm" (ngSubmit)="registrarCargo()">
+  <div>
+    <label for="nombre">Nombre del Cargo:</label>
+    <input id="nombre" formControlName="nombre" type="text" />
+  </div>
+  <button type="submit" [disabled]="cargoForm.invalid">Registrar Cargo</button>
+</form>

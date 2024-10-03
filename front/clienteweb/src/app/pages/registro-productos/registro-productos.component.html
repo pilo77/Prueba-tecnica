@@ -1,0 +1,21 @@
+<form [formGroup]="productoForm" (ngSubmit)="registrarProducto()">
+  <div>
+    <label for="nombre">Nombre del Producto:</label>
+    <input id="nombre" formControlName="nombre" type="text" />
+  </div>
+  <div>
+    <label for="cantidad">Cantidad:</label>
+    <input id="cantidad" formControlName="cantidad" type="number" />
+  </div>
+  <div>
+    <label for="fechaIngreso">Fecha de Ingreso:</label>
+    <input id="fechaIngreso" formControlName="fechaIngreso" type="date" />
+  </div>
+  <div>
+    <label for="usuarioId">ID del Usuario:</label>
+    <input id="usuarioId" formControlName="usuarioId" type="number" />
+  </div>
+  <button type="submit" [disabled]="productoForm.invalid">
+    Registrar Producto
+  </button>
+</form>

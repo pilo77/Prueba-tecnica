@@ -1,0 +1,25 @@
+<form [formGroup]="usuarioForm" (ngSubmit)="registrarUsuario()">
+  <div>
+    <label for="nombre">Nombre del Usuario:</label>
+    <input id="nombre" formControlName="nombre" type="text" />
+  </div>
+  <div>
+    <label for="email">Email:</label>
+    <input id="email" formControlName="email" type="email" />
+  </div>
+  <div>
+    <label for="edad">Edad:</label>
+    <input id="edad" formControlName="edad" type="number" />
+  </div>
+  <div>
+    <label for="cargo">Cargo:</label>
+    <input id="cargo" formControlName="cargo" type="text" />
+  </div>
+  <div>
+    <label for="fechaIngreso">Fecha de Ingreso:</label>
+    <input id="fechaIngreso" formControlName="fechaIngreso" type="date" />
+  </div>
+  <button type="submit" [disabled]="usuarioForm.invalid">
+    Registrar Usuario
+  </button>
+</form>
