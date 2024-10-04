@@ -1,0 +1,58 @@
+<form (ngSubmit)="buscar()">
+  <div>
+    <label for="nombre">Nombre del Producto:</label>
+    <input id="nombre" [(ngModel)]="nombre" name="nombre" type="text" />
+  </div>
+  <div>
+    <label for="usuarioId">Usuario ID:</label>
+    <input
+      id="usuarioId"
+      [(ngModel)]="usuarioId"
+      name="usuarioId"
+      type="number"
+    />
+  </div>
+  <div>
+    <label for="fechaIngreso">Fecha de Ingreso:</label>
+    <input
+      id="fechaIngreso"
+      [(ngModel)]="fechaIngreso"
+      name="fechaIngreso"
+      type="date"
+    />
+  </div>
+  <div>
+    <label for="fechaModificacion">Fecha de Modificación:</label>
+    <input
+      id="fechaModificacion"
+      [(ngModel)]="fechaModificacion"
+      name="fechaModificacion"
+      type="date"
+    />
+  </div>
+  <button type="submit">Buscar Productos</button>
+</form>
+
+<!-- Mostrar los resultados de la búsqueda -->
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Cantidad</th>
+      <th>Fecha de Ingreso</th>
+      <th>Usuario ID</th>
+      <th>Fecha de Modificación</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let producto of productos">
+      <td>{{ producto.id }}</td>
+      <td>{{ producto.nombre }}</td>
+      <td>{{ producto.cantidad }}</td>
+      <td>{{ producto.fechaIngreso }}</td>
+      <td>{{ producto.usuarioId }}</td>
+      <td>{{ producto.fechaModificacion }}</td>
+    </tr>
+  </tbody>
+</table>
