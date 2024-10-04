@@ -1,0 +1,36 @@
+<h2>Editar Producto</h2>
+<form [formGroup]="productoForm" (ngSubmit)="guardarCambios()">
+  <div>
+    <label for="nombre">Nombre del Producto:</label>
+    <input id="nombre" formControlName="nombre" type="text" />
+    <small *ngIf="productoForm.get('nombre')?.invalid && productoForm.get('nombre')?.touched">
+      El nombre es requerido
+    </small>
+  </div>
+
+  <div>
+    <label for="cantidad">Cantidad:</label>
+    <input id="cantidad" formControlName="cantidad" type="number" />
+    <small *ngIf="productoForm.get('cantidad')?.invalid && productoForm.get('cantidad')?.touched">
+      La cantidad es requerida y debe ser un número
+    </small>
+  </div>
+
+  <div>
+    <label for="fechaIngreso">Fecha de Ingreso:</label>
+    <input id="fechaIngreso" formControlName="fechaIngreso" type="date" />
+    <small *ngIf="productoForm.get('fechaIngreso')?.invalid && productoForm.get('fechaIngreso')?.touched">
+      La fecha de ingreso es requerida
+    </small>
+  </div>
+
+  <div>
+    <label for="usuarioId">ID del Usuario:</label>
+    <input id="usuarioId" formControlName="usuarioId" type="number" />
+    <small *ngIf="productoForm.get('usuarioId')?.invalid && productoForm.get('usuarioId')?.touched">
+      El ID de usuario es requerido
+    </small>
+  </div>
+
+  <button type="submit" [disabled]="productoForm.invalid">Guardar Cambios</button>
+</form>

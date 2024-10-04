@@ -50,8 +50,6 @@ export class ProductoService {
 
   eliminarProducto(id: number, usuarioId: number): Observable<void> {
     const params = new HttpParams().set('usuarioId', usuarioId.toString());
-    return this.http.delete<void>(`${this.baseUrl}/productos/${id}`, {
-      params,
-    });
+    return this.http.delete<void>(`${this.baseUrl}/productos/${id}`, { params });
   }
 }

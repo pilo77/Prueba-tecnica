@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CargoService } from '../../services/cargo.service';
-import { ReactiveFormsModule } from '@angular/forms'; // Importar ReactiveFormsModule
+import { ReactiveFormsModule } from '@angular/forms'; 
+import { Router } from '@angular/router'; 
 
 @Component({
   selector: 'app-registro-cargos',
@@ -13,7 +14,11 @@ import { ReactiveFormsModule } from '@angular/forms'; // Importar ReactiveFormsM
 export class RegistroCargosComponent {
   cargoForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private cargoService: CargoService) {
+  constructor(
+    private fb: FormBuilder,
+    private cargoService: CargoService,
+    private router: Router 
+  ) {
     this.cargoForm = this.fb.group({
       nombre: ['', Validators.required],
     });
@@ -26,6 +31,9 @@ export class RegistroCargosComponent {
         .subscribe((response) => {
           console.log('Cargo registrado:', response);
           this.cargoForm.reset();
+
+          // Redirigir al formulario de usuarios después de registrar el cargo
+          this.router.navigate(['/RegistroUsuarios']);
         });
     }
   }

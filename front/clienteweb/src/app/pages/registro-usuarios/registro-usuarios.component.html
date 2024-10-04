@@ -1,25 +1,47 @@
-<form [formGroup]="usuarioForm" (ngSubmit)="registrarUsuario()">
-  <div>
+<h2>Registrar Usuario</h2>
+
+<form [formGroup]="usuarioForm" (ngSubmit)="registrarUsuario()" class="form-container">
+  <div class="form-group">
     <label for="nombre">Nombre del Usuario:</label>
-    <input id="nombre" formControlName="nombre" type="text" />
+    <input id="nombre" formControlName="nombre" type="text" class="form-control" />
+    <small *ngIf="usuarioForm.get('nombre')?.invalid && usuarioForm.get('nombre')?.touched">
+      El nombre es requerido
+    </small>
   </div>
-  <div>
+
+  <div class="form-group">
     <label for="email">Email:</label>
-    <input id="email" formControlName="email" type="email" />
+    <input id="email" formControlName="email" type="email" class="form-control" />
+    <small *ngIf="usuarioForm.get('email')?.invalid && usuarioForm.get('email')?.touched">
+      El email es requerido y debe ser válido
+    </small>
   </div>
-  <div>
+
+  <div class="form-group">
     <label for="edad">Edad:</label>
-    <input id="edad" formControlName="edad" type="number" />
+    <input id="edad" formControlName="edad" type="number" class="form-control" />
+    <small *ngIf="usuarioForm.get('edad')?.invalid && usuarioForm.get('edad')?.touched">
+      La edad es requerida
+    </small>
   </div>
-  <div>
-    <label for="cargo">Cargo:</label>
-    <input id="cargo" formControlName="cargo" type="text" />
+
+  <div class="form-group">
+    <label for="cargoId">Cargo:</label>
+    <select id="cargoId" formControlName="cargoId" class="form-control">
+      <option *ngFor="let cargo of cargos" [value]="cargo.id">{{ cargo.nombre }}</option>
+    </select>
+    <small *ngIf="usuarioForm.get('cargoId')?.invalid && usuarioForm.get('cargoId')?.touched">
+      El cargo es requerido
+    </small>
   </div>
-  <div>
+
+  <div class="form-group">
     <label for="fechaIngreso">Fecha de Ingreso:</label>
-    <input id="fechaIngreso" formControlName="fechaIngreso" type="date" />
+    <input id="fechaIngreso" formControlName="fechaIngreso" type="date" class="form-control" />
+    <small *ngIf="usuarioForm.get('fechaIngreso')?.invalid && usuarioForm.get('fechaIngreso')?.touched">
+      La fecha de ingreso es requerida
+    </small>
   </div>
-  <button type="submit" [disabled]="usuarioForm.invalid">
-    Registrar Usuario
-  </button>
+
+  <button type="submit" class="btn-submit" [disabled]="usuarioForm.invalid">Registrar Usuario</button>
 </form>

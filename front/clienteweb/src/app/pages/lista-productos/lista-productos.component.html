@@ -1,23 +1,48 @@
-<h2>Lista de Productos</h2>
-<div class="lista-productos-container">
-  <table class="lista-productos">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Cantidad</th>
-        <th>Fecha de Ingreso</th>
-        <th>Usuario ID</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let producto of productos">
-        <td>{{ producto.id }}</td>
-        <td>{{ producto.nombre }}</td>
-        <td>{{ producto.cantidad }}</td>
-        <td>{{ producto.fechaIngreso }}</td>
-        <td>{{ producto.usuarioId }}</td>
-      </tr>
-    </tbody>
-  </table>
+<div class="container">
+  <h2>Lista de Productos</h2>
+
+  <!-- Formulario de búsqueda -->
+  <form [formGroup]="filtroForm" (ngSubmit)="buscarProductos()" class="form-container">
+    <div>
+      <label for="nombre">Nombre:</label>
+      <input id="nombre" formControlName="nombre" type="text" />
+    </div>
+
+    <div>
+      <label for="usuarioId">ID del Usuario:</label>
+      <input id="usuarioId" formControlName="usuarioId" type="number" />
+    </div>
+
+    <div>
+      <label for="fechaIngreso">Fecha de Ingreso:</label>
+      <input id="fechaIngreso" formControlName="fechaIngreso" type="date" />
+    </div>
+
+    <button type="submit" [disabled]="filtroForm.invalid">Buscar</button>
+  </form>
+
+  <button (click)="irACrearProducto()" class="btn-crear-producto">Crear Producto</button>
+
+  <div class="lista-productos-container">
+    <table class="lista-productos">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Cantidad</th>
+          <th>Fecha de Ingreso</th>
+          <th>Usuario ID</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let producto of productos">
+          <td>{{ producto.id }}</td>
+          <td>{{ producto.nombre }}</td>
+          <td>{{ producto.cantidad }}</td>
+          <td>{{ producto.fechaIngreso }}</td>
+          <td>{{ producto.usuarioId }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

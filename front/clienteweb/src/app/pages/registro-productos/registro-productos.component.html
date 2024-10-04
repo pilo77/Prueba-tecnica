@@ -2,20 +2,37 @@
   <div>
     <label for="nombre">Nombre del Producto:</label>
     <input id="nombre" formControlName="nombre" type="text" />
+    <div *ngIf="productoForm.get('nombre')?.invalid && productoForm.get('nombre')?.touched">
+      <small *ngIf="productoForm.get('nombre')?.hasError('required')">El nombre es obligatorio.</small>
+      <small *ngIf="productoForm.get('nombre')?.hasError('minlength')">El nombre debe tener al menos 3 caracteres.</small>
+    </div>
   </div>
+
   <div>
     <label for="cantidad">Cantidad:</label>
     <input id="cantidad" formControlName="cantidad" type="number" />
+    <div *ngIf="productoForm.get('cantidad')?.invalid && productoForm.get('cantidad')?.touched">
+      <small *ngIf="productoForm.get('cantidad')?.hasError('required')">La cantidad es obligatoria.</small>
+      <small *ngIf="productoForm.get('cantidad')?.hasError('min')">La cantidad debe ser mayor que 0.</small>
+    </div>
   </div>
+
   <div>
     <label for="fechaIngreso">Fecha de Ingreso:</label>
-    <input id="fechaIngreso" formControlName="fechaIngreso" type="date" />
+    <input id="fechaIngreso" formControlName="fechaIngreso" type="date" max="{{ fechaActual }}" />
+    <div *ngIf="productoForm.get('fechaIngreso')?.invalid && productoForm.get('fechaIngreso')?.touched">
+      <small *ngIf="productoForm.get('fechaIngreso')?.hasError('required')">La fecha de ingreso es obligatoria.</small>
+    </div>
   </div>
+
   <div>
-    <label for="usuarioId">ID del Usuario:</label>
+    <label for="usuarioId">Usuario ID:</label>
     <input id="usuarioId" formControlName="usuarioId" type="number" />
+    <div *ngIf="productoForm.get('usuarioId')?.invalid && productoForm.get('usuarioId')?.touched">
+      <small *ngIf="productoForm.get('usuarioId')?.hasError('required')">El usuario es obligatorio.</small>
+    </div>
   </div>
-  <button type="submit" [disabled]="productoForm.invalid">
-    Registrar Producto
-  </button>
+
+  <button type="submit" [disabled]="productoForm.invalid">Registrar Producto</button>
 </form>
+
