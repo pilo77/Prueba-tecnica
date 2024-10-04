@@ -13,7 +13,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/productos")
 public class ProductoController {
 
