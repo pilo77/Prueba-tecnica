@@ -5,6 +5,7 @@ Este proyecto es un **Sistema de Inventario Automotriz** que permite gestionar p
 
 ## 2. **Tecnologías Utilizadas**
 
+
 ### Backend:
 - **Java** (Spring Boot)
 - **Spring Data JPA** (para la gestión de bases de datos)
