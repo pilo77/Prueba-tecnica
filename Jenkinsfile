@@ -23,4 +23,14 @@ pipeline {
             }
         }
     }
+    post{
+        succes{
+            bat'echo "build successful"'
+            
+        }
+        failure{
+            bat'echo "build failed"'
+            
+        }
+    }
 }
