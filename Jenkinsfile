@@ -3,7 +3,8 @@ pipeline {
     stages {
         stage('Checkout code') {
             steps {
-                git 'https://github.com/pilo77/Prueba-tecnica'
+               git branch: 'main', url: 'https://github.com/pilo77/Prueba-tecnica'
+
             }
         }
         stage('Build') {
