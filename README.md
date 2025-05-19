@@ -14,6 +14,7 @@ Este proyecto es un **Sistema de Inventario Automotriz** que permite gestionar p
 - **JUnit** (pruebas unitarias)
 - **Swagger** (documentación de API)
 
+
 ### Frontend:
 - **Angular** (versión 17)
 - **TypeScript**
