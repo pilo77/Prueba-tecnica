@@ -1,20 +1,24 @@
 pipeline {
     agent any
-
     stages {
+        stage('Checkout code') {
+            steps {
+                git 'https://github.com/pilo77/Prueba-tecnica'
+            }
+        }
         stage('Build') {
             steps {
-                echo 'Building the app'
+                sh 'echo "building the app"'
             }
         }
         stage('Test') {
             steps {
-                echo 'Running tests'
+                sh 'echo "Running tests"'
             }
         }
         stage('Deploy') {
             steps {
-                echo 'Deploying the app'
+                sh 'echo "deploying"'
             }
         }
     }
