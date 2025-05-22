@@ -12,7 +12,7 @@ Este proyecto es un **Sistema de Inventario Automotriz** que permite gestionar p
 - **PostgreSQL** (base de datos relacional)
 - **Maven** (gestión de dependencias)
 - **JUnit** (pruebas unitarias)
-- **Swagger** (documentación de API)
+- **Swagger** (documentación de API)).
 
 
 ### Frontend:
