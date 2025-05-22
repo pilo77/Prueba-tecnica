@@ -3,7 +3,7 @@
 ## 1. **Descripción General del Proyecto**
 Este proyecto es un **Sistema de Inventario Automotriz** que permite gestionar productos, cargos y usuarios. Los usuarios pueden registrar productos, ver una lista de los mismos, buscar productos por distintos filtros y actualizar la información de los productos. El sistema incluye un backend desarrollado en Java con Spring Boot y un frontend desarrollado en Angular..
 
-## 2. **Tecnologías Utilizadas**
+## 2. **Tecnologías Utilizadas**...
 
 
 ### Backend:
