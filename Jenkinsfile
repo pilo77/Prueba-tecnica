@@ -1,36 +1,52 @@
 pipeline {
     agent any
+
     stages {
         stage('Checkout code') {
             steps {
-               git branch: 'main', url: 'https://github.com/pilo77/Prueba-tecnica'
-
+                git branch: 'main', url: 'https://github.com/pilo77/Prueba-tecnica'
             }
         }
+
         stage('Build') {
             steps {
-                sh 'echo "building the app"'
+                echo 'Building the app...'
             }
         }
+
         stage('Test') {
             steps {
-                sh 'echo "Running tests"'
+                echo 'Running tests...'
             }
         }
+
         stage('Deploy') {
             steps {
-                sh 'echo "deploying"'
+                echo 'Deploying...'
             }
         }
     }
-    post{
-        success{
-            bat'echo "build successful"'
-            
+
+    post {
+        success {
+            script {
+                if (isUnix()) {
+                    sh 'echo "Build successful"'
+                } else {
+                    bat 'echo Build successful'
+                }
+            }
         }
-        failure{
-            bat'echo "build failed"'
-            
+
+        failure {
+            script {
+                if (isUnix()) {
+                    sh 'echo "Build failed"'
+                } else {
+                    bat 'echo Build failed'
+                }
+            }
         }
     }
 }
+
